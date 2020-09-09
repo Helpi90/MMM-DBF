@@ -14,6 +14,9 @@ Module.register("MMM-DBF", {
         station: "Düsseldorf Hbf",
         platform: '',
         via: '',
+        showArrivalTime: false,
+        showRealTime: false,
+        onlyArrivalTime: false,
         height:"600px",
 		width:"400px",
     },
@@ -26,7 +29,18 @@ Module.register("MMM-DBF", {
      * @returns {String} url
      */
     gennerateUrl: function() {
-        return "https://dbf.finalrewind.org/"+ this.config.station + "?platforms=" + this.config.platform + "&via=" + this.config.via +"&hide_opts=1";
+        let base_url = "https://dbf.finalrewind.org/";
+        base_url+= this.config.station + "?platforms=" + this.config.platform + "&via=" + this.config.via +"&hide_opts=1";
+        if (this.config.showArrivalTime) {
+            base_url+="&detailed=1";
+        }
+        if (this.config.showRealTime) {
+            base_url+="&show_realtime=1"
+        }
+        if (this.config.onlyArrivalTime) {
+            base_url+= "&admode=dep"
+        }
+        return base_url;
     },
 
     /**
