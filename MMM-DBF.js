@@ -1,13 +1,13 @@
 /* global Module */
 
 /* Magic Mirror
- * Module: MMM-VrrApp
+ * Module: MMM-DBF
  *
  * By Marc Helpenstein <helpi9007@gmail.com>
  * MIT Licensed.
  */
 
-Module.register("MMM-VrrApp", {
+Module.register("MMM-DBF", {
     defaults: {
         updateInterval: 60000, // 1 minute
         retryDelay: 30000, // 30 seconds

@@ -1,25 +1,25 @@
-# MMM-VrrApp
+# MMM-DBF (Deutsche Bahn Frontend)
 This is a module for the [MagicMirror²](https://github.com/MichMich/MagicMirror/).
 
-Displays the next departure times of Trains, subway and Buses from any city and station in the german federal state North Rhine-Westphalia (VRR).
+Displays the next departure times and delays (with details) of Trains from any city and station in germany.
 
 ### App Theme
 
 <p float="left">
-  <img src="vrrApp_wide.png" width="40%" />
-  <img src="vrrApp_dark.png" width="40%" /> 
+  <img src="dbfApp_wide.png" width="40%" />
+  <img src="dbfApp_dark.png" width="40%" /> 
 </p>
 
 ### App Detail (after click on a train)
 <p float="left">
-  <img src="vrrApp_high.png" width="40%" />
-  <img src="vrrApp_detail.png" width="40%" /> 
+  <img src="dbfApp_high.png" width="40%" />
+  <img src="dbfApp_detail.png" width="40%" /> 
 </p>
 
 ## Installing the module
 Clone this repository in your `~/MagicMirror/modules/`:
 
-`git clone https://github.com/Defjam121/MMM-VrrApp`
+`git clone https://github.com/Defjam121/MMM-DBF`
 
 
 To use this module, add the following configuration block to the modules array in the `config/config.js` file:
@@ -27,7 +27,7 @@ To use this module, add the following configuration block to the modules array i
 var config = {
     modules: [
         {
-            module: 'MMM-VrrApp',
+            module: 'MMM-DBF',
             position: 'top_right',
             config: {
                 station: "Düsseldorf Hbf",
