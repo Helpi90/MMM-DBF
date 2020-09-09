@@ -46,7 +46,7 @@ var config = {
 | `station` | `"Düsseldorf Hbf"`  | *Required* <br/>German Station Name
 | `updateInterval` |  `60000` |*Optional* <br/>How often should the data be fetched. 
 | `platform` | `' '` | *Optional* <br/> Only show platform. Supports multiple strings, separated by comma (",")
-| `via` | `' '` | *Optional* <br/> Boolean to show routs via. Supports multiple strings, separated by comma (",")
+| `via` | `' '` | *Optional* <br/> Only show routs via. Supports multiple strings, separated by comma (",")
 | `height` | `600px` | *Optional* <br/> The height of the App
 | `width` | `400px` | *Optional* <br/> The width of the App
 | `showArrivalTime` | `false` | *Optional* <br/> Boolean to show arrival time too. 
