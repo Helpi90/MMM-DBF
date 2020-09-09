@@ -6,14 +6,14 @@ Displays the next departure times of Trains, subway and Buses from any city and 
 ### App Theme
 
 <p float="left">
-  <img src="vrrApp_wide.png" width="25%" />
-  <img src="vrrApp_dark.png" width="25%" /> 
+  <img src="vrrApp_wide.png" width="50%" />
+  <img src="vrrApp_dark.png" width="50%" /> 
 </p>
 
 ### App Detail (after click on a train)
 <p float="left">
-  <img src="vrrApp_high.png" width="25%" />
-  <img src="vrrApp_detail.png" width="25%" /> 
+  <img src="vrrApp_high.png" width="50%" />
+  <img src="vrrApp_detail.png" width="50%" /> 
 </p>
 
 ## Installing the module
