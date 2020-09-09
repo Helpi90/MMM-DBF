@@ -32,7 +32,7 @@ var config = {
             config: {
                 station: "Düsseldorf Hbf",
                 height:"600px",
-		        width:"400px",
+                width:"400px",
             }
         }
     ]
@@ -41,9 +41,9 @@ var config = {
 
 ## Configuration options
 
-| **Option** | **Default** | **Description** |
-| --- | --- | --- |
-| `station` | `"Düsseldorf Hbf"` | *Required* <br/>German Station Name
+| **Option** | **Default**  | **Description** |
+| --- | ---  | --- |
+| `station` | `"Düsseldorf Hbf"`  | *Required* <br/>German Station Name
 | `updateInterval` |  `60000` |*Optional* <br/>How often should the data be fetched. 
 | `platform` | `''` | *Optional* <br/> Only show platform. Supports multiple strings, separated by comma (",")
 | `via` | `false` | *Optional* <br/> Only show routs via. Supports multiple strings, separated by comma (",")
