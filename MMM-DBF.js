@@ -73,9 +73,9 @@ Module.register("MMM-DBF", {
      * @description Update App
      */
     updateApp: function() {
-		this.src = this.vrrAppUrl();
-		this.updateDom(this.config.animationSpeed);
-		this.scheduleUpdate(this.config.refreshInterval);
+        this.src = this.vrrAppUrl();
+        this.updateDom(this.config.animationSpeed);
+        this.scheduleUpdate(this.config.refreshInterval);
     },
 
     /**
@@ -86,9 +86,9 @@ Module.register("MMM-DBF", {
     getDom: function () {
         var iframe = document.createElement("IFRAME");
         iframe.style = "border:0";
-		iframe.width = this.config.width;
-		iframe.height = this.config.height;
+        iframe.width = this.config.width;
+        iframe.height = this.config.height;
         iframe.src =  this.gennerateUrl();
-		return iframe;
+        return iframe;
     },
 });
