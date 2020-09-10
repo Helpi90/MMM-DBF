@@ -130,7 +130,6 @@ Module.register("MMM-DBF", {
             let departures = this.dataRequest["departures"]
             let tableHead= this.createTableHeader(departures);
             tableWrapper.appendChild(tableHead);   
-            //let usableResults = self.removeResultsFromThePast(apiResult.raw);
             this.createTableContent(departures, tableWrapper); 
         }
         return tableWrapper;
@@ -162,6 +161,34 @@ Module.register("MMM-DBF", {
     },
 
     /**
+     * @description Get col number
+     */
+    getColDelay: function() {
+        if (this.config.via !== "") {
+            return 5;
+        }else {
+            return 4;
+        }
+    },
+
+    /**
+     * @param {Object} train 
+     */
+    getViaFromRoute: function(train) {
+        let viaConfigList = this.config.via.split(",");
+        console.log(viaConfigList);
+        let route = train["via"];
+        for (let i = 0; i < route.length; i++) {
+            const city = route[i];
+            for (let j = 0; j < viaConfigList.length; j++) {
+                if(city.includes(viaConfigList[j])) {
+                    return viaConfigList[j];
+                }
+            }
+        }
+    },
+
+    /**
      * @description Creates the header for the Table
      */
     createTableHeader: function (departures) {
@@ -183,7 +210,6 @@ Module.register("MMM-DBF", {
             tableHeadValues.push(this.translate('ARRIVAL'));
         }
         
-
         if(this.checkDelayExist(departures)){
             let delayClockIcon = '<i class="fa fa-clock-o"></i>';
             tableHeadValues.push(delayClockIcon);
@@ -198,36 +224,6 @@ Module.register("MMM-DBF", {
     },
 
     /**
-     * @description Get col number
-     */
-    getColDelay: function() {
-        if (this.config.via !== "") {
-            return 5;
-        }else {
-            return 4;
-        }
-
-    },
-
-    /**
-     * @param {Object} train 
-     */
-    getViaFromRoute: function(train) {
-        let viaConfigList = this.config.via.split(",");
-        console.log(viaConfigList);
-        let route = train["via"];
-        for (let i = 0; i < route.length; i++) {
-            const city = route[i];
-            for (let j = 0; j < viaConfigList.length; j++) {
-                if(city.includes(viaConfigList[j])) {
-                    return viaConfigList[j];
-                }
-            }
-        }
-        //return train["destination"];
-    },
-
-    /**
      * @param usableResults
      * @param tableWrapper
      * @returns {HTMLTableRowElement}
@@ -236,10 +232,8 @@ Module.register("MMM-DBF", {
         let self = this;
         let size = this.getSize(departures);
         for (let index = 0; index < size; index++) {
-
             let obj = departures[index];
             console.log(obj);
-            // check destination
             if(self.config.withoutDestination.length > 0){
                 let found = false;
                 for (let index = 0; index < self.config.withoutDestination.length; index++) {
@@ -254,29 +248,9 @@ Module.register("MMM-DBF", {
                     continue;
                 }
             }
-            
-            if(this.config.via !== "" && this.getViaFromRoute(obj) === undefined) {
-
-            }
              
             let trWrapper = document.createElement("tr");
             trWrapper.className = 'tr';
-            /*
-            let remainingTime = self.calculateRemainingMinutes(obj.sched_date, obj.sched_time);
-            let timeValue;
-            switch (self.config.displayTimeOption) {
-                case 'time+countdown':
-                    timeValue = obj.sched_time + " (" + remainingTime + ")";
-                    break;
-                case 'time':
-                    timeValue = obj.sched_time;
-                    break;
-                default:
-                    timeValue = remainingTime;
-            }
-
-            let adjustedLine = self.stripLongLineNames(obj);
-            */
 
             let tdValues = [
                 obj.train,
@@ -314,7 +288,6 @@ Module.register("MMM-DBF", {
                 if (c === this.getColDelay()) {
                     tdWrapper.className = 'delay';
                 }
-
                 trWrapper.appendChild(tdWrapper);
             }
             tableWrapper.appendChild(trWrapper);
