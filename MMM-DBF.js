@@ -19,6 +19,7 @@ Module.register("MMM-DBF", {
         showRealTime: false,
         onlyArrivalTime: false,
         numberOfResults: 10,
+        hideLowDelay: false,
         withoutDestination: [],
         height:"600px",
 		width:"400px",
@@ -45,6 +46,9 @@ Module.register("MMM-DBF", {
         }else {
             base_url+= "&admode=dep";
         }
+        if (this.config.hideLowDelay) {
+            base_url+= "&hidelowdelay=1"
+        }
         return base_url;
     },
 
@@ -60,6 +64,7 @@ Module.register("MMM-DBF", {
         this.loaded = false;
         // Schedule update timer.
         this.getData();
+        console.log(this.gennerateUrl());
     },
 
     /**
@@ -154,7 +159,12 @@ Module.register("MMM-DBF", {
     checkDelayExist: function(departures){
         for (let index = 0; index < this.getSize(departures); index++) {
             if (departures[index]["delayDeparture"]) {
-                return true;
+                if (this.config.hideLowDelay && departures[index]["delayDeparture"] >= 5) {
+                    return true;
+                }
+                if (!this.config.hideLowDelay) {
+                    return true;
+                }
             }
         }
         return false;
@@ -274,7 +284,11 @@ Module.register("MMM-DBF", {
             }
             
             if(this.checkDelayExist(departures)){
-                if(obj.delayDeparture > 0){
+                if(obj.delayDeparture > 0 && !this.config.hideLowDelay){
+                    let delay = ' +' + obj.delayDeparture;
+                    tdValues.push(delay);
+                }
+                else if (obj.delayDeparture >= 5) {
                     let delay = ' +' + obj.delayDeparture;
                     tdValues.push(delay);
                 }
