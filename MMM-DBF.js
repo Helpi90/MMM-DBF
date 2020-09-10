@@ -47,12 +47,44 @@ Module.register("MMM-DBF", {
      * @description Calls updateIterval
      */
     start: function () {
+        let self = this;
+        let dataRequest = null;
+        let dataNotification = null;
+
         //Flag for check if module is loaded
         this.loaded = false;
         // Schedule update timer.
+        this.getData();
         setInterval(function () {
-            this.updateDom();
+            self.updateDom();
         }, this.config.updateInterval);
+    },
+
+    getData: function () {
+        let self = this;
+
+        let urlApi = this.gennerateUrl()+"&mode=json&version=3";
+        let retry = true;
+
+        let dataRequest = new XMLHttpRequest();
+        dataRequest.open("GET", urlApi, true);
+        dataRequest.onreadystatechange = function () {
+            if (this.readyState === 4) {
+                if (this.status === 200) {
+                    self.processData(JSON.parse(this.response));
+                } else if (this.status === 401) {
+                    self.updateDom(self.config.animationSpeed);
+                    Log.error(self.name, this.status);
+                    retry = false;
+                } else {
+                    Log.error(self.name, "Could not load data.");
+                }
+                if (retry) {
+                    self.scheduleUpdate((self.loaded) ? -1 : self.config.retryDelay);
+                }
+            }
+        };
+        dataRequest.send();
     },
 
     /**
@@ -60,22 +92,14 @@ Module.register("MMM-DBF", {
      * @param {int} delay - Milliseconds before next update.
      */
     scheduleUpdate: function (delay) {
+        let self = this;
         let nextLoad = this.config.updateInterval;
         if (typeof delay !== "undefined" && delay >= 0) {
             nextLoad = delay;
         }
         setTimeout(function () {
-            this.updateApp();
+            self.getData();
         }, nextLoad);
-    },
-
-    /**
-     * @description Update App
-     */
-    updateApp: function() {
-        this.src = this.vrrAppUrl();
-        this.updateDom(this.config.animationSpeed);
-        this.scheduleUpdate(this.config.refreshInterval);
     },
 
     /**
@@ -90,5 +114,27 @@ Module.register("MMM-DBF", {
         iframe.height = this.config.height;
         iframe.src =  this.gennerateUrl();
         return iframe;
+    },
+
+    processData: function (data) {
+        this.dataRequest = data;
+
+        if (this.loaded === false) {
+            this.updateDom(this.config.animationSpeed);
+        }
+        this.loaded = true;
+
+        // the data if load
+        // send notification to helper
+        this.sendSocketNotification("MMM-DBF-NOTIFICATION_TEST", "data");
+    },
+    
+    // socketNotificationReceived from helper
+    socketNotificationReceived: function (notification, payload) {
+        if (notification === "MMM-DBF-NOTIFICATION_TEST") {
+            // set dataNotification
+            this.dataNotification = payload;
+            this.updateDom();
+        }
     },
 });
