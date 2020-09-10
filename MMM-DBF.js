@@ -14,9 +14,12 @@ Module.register("MMM-DBF", {
         station: "Düsseldorf Hbf",
         platform: '',
         via: '',
+        showApp: false,
         showArrivalTime: false,
-        showRealTime: false,
+        showRealTime: true,
         onlyArrivalTime: false,
+        numberOfResults: 10,
+        withoutDestination: ["test"],
         height:"600px",
 		width:"400px",
     },
@@ -35,10 +38,12 @@ Module.register("MMM-DBF", {
             base_url+="&detailed=1";
         }
         if (this.config.showRealTime) {
-            base_url+="&show_realtime=1"
+            base_url+="&show_realtime=1";
         }
         if (this.config.onlyArrivalTime) {
-            base_url+= "&admode=dep"
+            base_url+= "&admode=dep";
+        }else {
+            base_url+= "&admode=dep";
         }
         return base_url;
     },
@@ -55,9 +60,10 @@ Module.register("MMM-DBF", {
         this.loaded = false;
         // Schedule update timer.
         this.getData();
-        setInterval(function () {
-            self.updateDom();
-        }, this.config.updateInterval);
+        console.log(this.gennerateUrl());
+        //setInterval(function () {
+        //    self.updateDom();
+        //}, this.config.updateInterval);
     },
 
     /**
@@ -96,6 +102,7 @@ Module.register("MMM-DBF", {
      */
     scheduleUpdate: function (delay) {
         let self = this;
+        console.log("scheduleUpdate");
         let nextLoad = this.config.updateInterval;
         if (typeof delay !== "undefined" && delay >= 0) {
             nextLoad = delay;
@@ -103,6 +110,9 @@ Module.register("MMM-DBF", {
         setTimeout(function () {
             self.getData();
         }, nextLoad);
+        if (!this.config.showApp) {
+            this.updateDom();
+        }
     },
 
     /**
@@ -111,14 +121,163 @@ Module.register("MMM-DBF", {
      * @returns {HTMLIframeElement}
      */
     getDom: function () {
-        var iframe = document.createElement("IFRAME");
-        iframe.style = "border:0";
-        iframe.width = this.config.width;
-        iframe.height = this.config.height;
-        iframe.src =  this.gennerateUrl();
-        return iframe;
+        console.log("DOM Update");
+        if (this.config.showApp) {
+            let iframe = document.createElement("IFRAME");
+            iframe.style = "border:0";
+            iframe.width = this.config.width;
+            iframe.height = this.config.height;
+            iframe.src =  this.gennerateUrl();
+            return iframe;
+        }
+        let tableWrapper = document.createElement("table");
+        tableWrapper.className = "small mmm-dbf-table";
+        if (this.dataRequest) {
+            let departures = this.dataRequest["departures"]
+            console.log(departures.length);
+            console.log(departures[0]);
+            let tableHead= this.createTableHeader(departures);
+            tableWrapper.appendChild(tableHead);   
+            //let usableResults = self.removeResultsFromThePast(apiResult.raw);
+            this.createTableContent(departures, tableWrapper); 
+        }
+        return tableWrapper;
     },
 
+    checkDelayExist: function(departures){
+        for (let index = 0; index < this.config.numberOfResults; index++) {
+            console.log(departures[index]["delayDeparture"]);
+            if (departures[index]["delayDeparture"]) {
+                return true;
+            }
+        }
+        return false;
+    },
+
+    /**
+     * @description Creates the header for the Table
+     */
+    createTableHeader: function (departures) {
+        let tableHead = document.createElement("tr");
+        tableHead.className = 'border-bottom';
+
+        let tableHeadValues = [
+            this.translate("LINE"),
+            this.translate('TRACK'),
+            this.translate('DESTINATION'),
+            this.translate('DEPARTURE')
+        ];
+
+        
+        if(this.checkDelayExist(departures)){
+            let delayClockIcon = '<i class="fa fa-clock-o"></i>';
+            tableHeadValues.push(delayClockIcon);
+        }
+
+        for (let thCounter = 0; thCounter < tableHeadValues.length; thCounter++) {
+            let tableHeadSetup = document.createElement("th");
+            tableHeadSetup.innerHTML = tableHeadValues[thCounter];
+            tableHead.appendChild(tableHeadSetup);
+        }
+        return tableHead;
+    },
+
+    /**
+     * @param usableResults
+     * @param tableWrapper
+     * @returns {HTMLTableRowElement}
+     */
+    createTableContent: function (departures, tableWrapper) {
+        let self = this;
+        for (let index = 0; index < self.config.numberOfResults; index++) {
+
+            let obj = departures[index];
+            console.log(obj);
+            // check destination
+            if(self.config.withoutDestination.length > 0){
+                let found = false;
+                for (let index = 0; index < self.config.withoutDestination.length; index++) {
+                    if (obj['destination'] === self.config.withoutDestination[index]) {
+                        found = true;
+                    }
+                }
+                if (found == true) {
+                    // increasing numberOfResults
+                    self.config.numberOfResults += 1;
+                    continue;
+                }
+            }
+            let trWrapper = document.createElement("tr");
+            trWrapper.className = 'tr';
+            /*
+            let remainingTime = self.calculateRemainingMinutes(obj.sched_date, obj.sched_time);
+            let timeValue;
+            switch (self.config.displayTimeOption) {
+                case 'time+countdown':
+                    timeValue = obj.sched_time + " (" + remainingTime + ")";
+                    break;
+                case 'time':
+                    timeValue = obj.sched_time;
+                    break;
+                default:
+                    timeValue = remainingTime;
+            }
+
+            let adjustedLine = self.stripLongLineNames(obj);
+            */
+
+            let tdValues = [
+                obj.train,
+                obj.platform,
+                obj.destination,
+            ];
+
+            if (obj.scheduledDeparture === null) {
+                tdValues.push(obj.scheduledArrival);
+            }else {
+                tdValues.push(obj.scheduledDeparture);
+            }
+            
+            if(this.checkDelayExist(departures)){
+                if(obj.delayDeparture > 0){
+                    let delay = ' +' + obj.delayDeparture;
+                    tdValues.push(delay);
+                }
+            }
+
+            for (let c = 0; c < tdValues.length; c++) {
+                let tdWrapper = document.createElement("td");
+
+                tdWrapper.innerHTML = tdValues[c];
+
+                if (c === 4) {
+                    tdWrapper.className = 'delay';
+                }
+
+                trWrapper.appendChild(tdWrapper);
+            }
+            tableWrapper.appendChild(trWrapper);
+        }
+    },
+
+    /**
+     * @description Define required styles.
+     * @returns {[string,string]}
+     */
+    getStyles: function () {
+        return ["MMM-DBF.css", "font-awesome.css"];
+    },
+
+    /**
+     * @description Load translations files
+     * @returns {{en: string, de: string}}
+     */
+    getTranslations: function () {
+        return {
+            en: "translations/en.json",
+            de: "translations/de.json"
+        };
+    },
     /**
      * @description Update data and send notification to node_helper
      * @param {*} data 
@@ -133,6 +292,7 @@ Module.register("MMM-DBF", {
 
         // the data if load
         // send notification to helper
+        console.log("ProcessData");
         this.sendSocketNotification("MMM-DBF-NOTIFICATION_TEST", "data");
     },
     
@@ -146,7 +306,7 @@ Module.register("MMM-DBF", {
             // set dataNotification
             this.dataNotification = payload;
             console.log(payload);
-            this.updateDom();
+            //this.updateDom();
         }
     },
 });
