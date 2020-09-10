@@ -60,6 +60,9 @@ Module.register("MMM-DBF", {
         }, this.config.updateInterval);
     },
 
+    /**
+     * @description Gets data from dbf.finalrewind.org
+     */
     getData: function () {
         let self = this;
 
@@ -116,6 +119,10 @@ Module.register("MMM-DBF", {
         return iframe;
     },
 
+    /**
+     * @description Update data and send notification to node_helper
+     * @param {*} data 
+     */
     processData: function (data) {
         this.dataRequest = data;
 
@@ -129,7 +136,11 @@ Module.register("MMM-DBF", {
         this.sendSocketNotification("MMM-DBF-NOTIFICATION_TEST", "data");
     },
     
-    // socketNotificationReceived from helper
+    /**
+     * @description Handle notification
+     * @param {*} notification 
+     * @param {*} payload 
+     */
     socketNotificationReceived: function (notification, payload) {
         if (notification === "MMM-DBF-NOTIFICATION_TEST") {
             // set dataNotification
