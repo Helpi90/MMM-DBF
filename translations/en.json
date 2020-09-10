@@ -1,5 +1,7 @@
 {
-    "LINE": "Line",
+    "TRAIN": "Train",
+    "VIA": "via",
+    "ARRIVAL": "Arrival",
     "DESTINATION": "Destination",
     "DEPARTURE": "Departure",
     "NOW": "now",

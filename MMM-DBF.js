@@ -16,10 +16,10 @@ Module.register("MMM-DBF", {
         via: '',
         showApp: false,
         showArrivalTime: false,
-        showRealTime: true,
+        showRealTime: false,
         onlyArrivalTime: false,
         numberOfResults: 10,
-        withoutDestination: ["test"],
+        withoutDestination: [],
         height:"600px",
 		width:"400px",
     },
@@ -60,10 +60,6 @@ Module.register("MMM-DBF", {
         this.loaded = false;
         // Schedule update timer.
         this.getData();
-        console.log(this.gennerateUrl());
-        //setInterval(function () {
-        //    self.updateDom();
-        //}, this.config.updateInterval);
     },
 
     /**
@@ -102,7 +98,6 @@ Module.register("MMM-DBF", {
      */
     scheduleUpdate: function (delay) {
         let self = this;
-        console.log("scheduleUpdate");
         let nextLoad = this.config.updateInterval;
         if (typeof delay !== "undefined" && delay >= 0) {
             nextLoad = delay;
@@ -116,12 +111,11 @@ Module.register("MMM-DBF", {
     },
 
     /**
-     * @description Create App Frame
+     * @description Create App Frame or HTML table
      * 
      * @returns {HTMLIframeElement}
      */
     getDom: function () {
-        console.log("DOM Update");
         if (this.config.showApp) {
             let iframe = document.createElement("IFRAME");
             iframe.style = "border:0";
@@ -134,8 +128,6 @@ Module.register("MMM-DBF", {
         tableWrapper.className = "small mmm-dbf-table";
         if (this.dataRequest) {
             let departures = this.dataRequest["departures"]
-            console.log(departures.length);
-            console.log(departures[0]);
             let tableHead= this.createTableHeader(departures);
             tableWrapper.appendChild(tableHead);   
             //let usableResults = self.removeResultsFromThePast(apiResult.raw);
@@ -144,9 +136,24 @@ Module.register("MMM-DBF", {
         return tableWrapper;
     },
 
+    /**
+     * @description Get the size for showing entrys
+     * @param {Object[]} departures 
+     */
+    getSize: function(departures) {
+        if (departures.length < this.config.numberOfResults) {
+            return departures.length;
+        }else {
+            return this.config.numberOfResults;
+        }
+    },
+
+    /**
+     * @description Check delay exist
+     * @param {Object[]} departures 
+     */
     checkDelayExist: function(departures){
-        for (let index = 0; index < this.config.numberOfResults; index++) {
-            console.log(departures[index]["delayDeparture"]);
+        for (let index = 0; index < this.getSize(departures); index++) {
             if (departures[index]["delayDeparture"]) {
                 return true;
             }
@@ -162,13 +169,21 @@ Module.register("MMM-DBF", {
         tableHead.className = 'border-bottom';
 
         let tableHeadValues = [
-            this.translate("LINE"),
+            this.translate("TRAIN"),
             this.translate('TRACK'),
             this.translate('DESTINATION'),
-            this.translate('DEPARTURE')
         ];
 
+        if (this.config.via !== "") {
+            tableHeadValues.push(this.translate('VIA'));
+        }
+        if (!this.config.onlyArrivalTime) {
+            tableHeadValues.push(this.translate('DEPARTURE'));
+        } else {
+            tableHeadValues.push(this.translate('ARRIVAL'));
+        }
         
+
         if(this.checkDelayExist(departures)){
             let delayClockIcon = '<i class="fa fa-clock-o"></i>';
             tableHeadValues.push(delayClockIcon);
@@ -183,13 +198,44 @@ Module.register("MMM-DBF", {
     },
 
     /**
+     * @description Get col number
+     */
+    getColDelay: function() {
+        if (this.config.via !== "") {
+            return 5;
+        }else {
+            return 4;
+        }
+
+    },
+
+    /**
+     * @param {Object} train 
+     */
+    getViaFromRoute: function(train) {
+        let viaConfigList = this.config.via.split(",");
+        console.log(viaConfigList);
+        let route = train["via"];
+        for (let i = 0; i < route.length; i++) {
+            const city = route[i];
+            for (let j = 0; j < viaConfigList.length; j++) {
+                if(city.includes(viaConfigList[j])) {
+                    return viaConfigList[j];
+                }
+            }
+        }
+        //return train["destination"];
+    },
+
+    /**
      * @param usableResults
      * @param tableWrapper
      * @returns {HTMLTableRowElement}
      */
     createTableContent: function (departures, tableWrapper) {
         let self = this;
-        for (let index = 0; index < self.config.numberOfResults; index++) {
+        let size = this.getSize(departures);
+        for (let index = 0; index < size; index++) {
 
             let obj = departures[index];
             console.log(obj);
@@ -202,11 +248,17 @@ Module.register("MMM-DBF", {
                     }
                 }
                 if (found == true) {
-                    // increasing numberOfResults
-                    self.config.numberOfResults += 1;
+                    if (size+1 <= departures.length) {
+                        size+=1;
+                    }
                     continue;
                 }
             }
+            
+            if(this.config.via !== "" && this.getViaFromRoute(obj) === undefined) {
+
+            }
+             
             let trWrapper = document.createElement("tr");
             trWrapper.className = 'tr';
             /*
@@ -232,7 +284,16 @@ Module.register("MMM-DBF", {
                 obj.destination,
             ];
 
-            if (obj.scheduledDeparture === null) {
+            if (this.config.via !== "") {
+                let via = this.getViaFromRoute(obj);
+                if(via === undefined) {
+                    continue;
+                }else {
+                    tdValues.push(this.getViaFromRoute(obj));
+                }
+            }
+
+            if (this.config.onlyArrivalTime) {
                 tdValues.push(obj.scheduledArrival);
             }else {
                 tdValues.push(obj.scheduledDeparture);
@@ -250,7 +311,7 @@ Module.register("MMM-DBF", {
 
                 tdWrapper.innerHTML = tdValues[c];
 
-                if (c === 4) {
+                if (c === this.getColDelay()) {
                     tdWrapper.className = 'delay';
                 }
 
@@ -292,7 +353,6 @@ Module.register("MMM-DBF", {
 
         // the data if load
         // send notification to helper
-        console.log("ProcessData");
         this.sendSocketNotification("MMM-DBF-NOTIFICATION_TEST", "data");
     },
     
@@ -305,7 +365,6 @@ Module.register("MMM-DBF", {
         if (notification === "MMM-DBF-NOTIFICATION_TEST") {
             // set dataNotification
             this.dataNotification = payload;
-            console.log(payload);
             //this.updateDom();
         }
     },

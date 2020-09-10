@@ -1,5 +1,7 @@
 {
-    "LINE": "Linie",
+    "TRAIN": "Zug",
+    "ARRIVAL": "Ankunft",
+    "VIA": "über",
     "DESTINATION": "Ziel",
     "DEPARTURE": "Abfahrt",
     "NOW": "sofort",
