@@ -1,0 +1,25 @@
+{
+  "name": "Magic-Mirror-Module-DBF",
+  "version": "1.0.0",
+  "description": "A module for the MagicMirror² is displays the next departure times and delays (with details) of Trains from any station in germany.",
+  "main": "MMM-DBF.js",
+  "author": "Marc Helpenstein <helpi9007@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "latest",
+    "grunt-eslint": "latest",
+    "grunt-jsonlint": "latest",
+    "grunt-markdownlint": "^1.0.13",
+    "grunt-stylelint": "latest",
+    "grunt-yamllint": "latest",
+    "stylelint-config-standard": "latest",
+    "time-grunt": "latest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Helpi90/MMM-DBF.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Helpi90/MMM-DBF/issues"
+  }
+}
