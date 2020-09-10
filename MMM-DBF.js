@@ -145,6 +145,7 @@ Module.register("MMM-DBF", {
         if (notification === "MMM-DBF-NOTIFICATION_TEST") {
             // set dataNotification
             this.dataNotification = payload;
+            console.log(payload);
             this.updateDom();
         }
     },
