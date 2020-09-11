@@ -143,7 +143,6 @@ Module.register("MMM-DBF", {
             } else {
                 Log.error(this.dataRequest.error);
             }
-
         }
         return tableWrapper;
     },
