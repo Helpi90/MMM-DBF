@@ -309,11 +309,6 @@ Module.register("MMM-DBF", {
         let count = 0;
         for (let index = 0; index < size; index++) {
             let obj = departures[index];
-<<<<<<< HEAD
-
-=======
-            console.log(obj);
->>>>>>> newOptions
             let trWrapper = document.createElement("tr");
             trWrapper.className = 'tr';
 
