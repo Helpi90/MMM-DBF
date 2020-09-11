@@ -27,7 +27,8 @@ Module.register("MMM-DBF", {
         height:"600px",
         width:"400px",
         setTableWidth: "",
-        timeOption: "time+countdown" // time+countdown or countdown
+        timeOption: "time+countdown", // time+countdown or countdown
+        showDelayMsg: true
     },
 
     requiresVersion: "2.1.0",
@@ -239,7 +240,7 @@ Module.register("MMM-DBF", {
 
     /**
 	 * @description Checks time and return day/hour/mins
-	 * @param {int} time - Time diff
+	 * @param {int} time - Remaining time
 	 */
 	convertTime: function (scheduledTime) {
 		let time = this.calculateTime(scheduledTime);
@@ -265,6 +266,19 @@ Module.register("MMM-DBF", {
         let dateTrain = new Date(d.getFullYear(),d.getMonth(),d.getDate(),time[0],time[1])
         let newStamp = new Date().getTime();
         return Math.round((dateTrain.getTime()-newStamp)/1000);;
+    },
+
+    /**
+     * @description Check msg exists
+     * @param {Object[]} departures 
+     */
+    checkMsgExist: function(departures) {
+        for (let index = 0; index < this.getSize(departures); index++) {
+            if (departures[index] !== undefined && departures[index]["messages"]["delay"].length > 0) {
+                return true;
+            }
+        }
+        return false;
     },
 
     /**
@@ -294,8 +308,15 @@ Module.register("MMM-DBF", {
             tableHeadValues.push(delayClockIcon);
         }
 
+        if (this.config.showDelayMsg && this.checkMsgExist(departures)) {
+            tableHeadValues.push(this.translate("DELAYMSG"));
+        }
+
         for (let thCounter = 0; thCounter < tableHeadValues.length; thCounter++) {
             let tableHeadSetup = document.createElement("th");
+            if (thCounter === 5) {
+                tableHeadSetup.style.textAlign = "Left";
+            }
             tableHeadSetup.innerHTML = tableHeadValues[thCounter];
             tableHead.appendChild(tableHeadSetup);
         }
@@ -315,7 +336,7 @@ Module.register("MMM-DBF", {
             let obj = departures[index];
             let trWrapper = document.createElement("tr");
             trWrapper.className = 'tr';
-
+            this.checkMsgExist(obj);
             // Check train
             if (this.config.train !== "" && !this.checkTrain(obj)) {
                 if (size+1 <= departures.length) {
@@ -389,10 +410,16 @@ Module.register("MMM-DBF", {
                     tdValues.push(delay);
                 }
             }
+
+            if (this.config.showDelayMsg && this.checkMsgExist(departures) && obj.delayDeparture > 0 )  {
+                if (obj["messages"]["delay"].length > 0) {
+                    tdValues.push(obj["messages"]["delay"][0].text);
+                }
+            }
+
             count++;
             for (let c = 0; c < tdValues.length; c++) {
                 let tdWrapper = document.createElement("td");
-
                 if (tdValues[c].length > this.config.scrollAfter && this.config.scrollAfter > 0) {
                     tdWrapper.innerHTML = '<marquee scrollamount="3" >' + tdValues[c] + '<marquee>';
                 } else {
@@ -401,6 +428,13 @@ Module.register("MMM-DBF", {
 
                 if (c === this.getColDelay()) {
                     tdWrapper.className = 'delay';
+                }
+                if (c === this.getColDelay() + 1) {
+                    console.log(tdValues[c].length);
+                    tdWrapper.className = 'delay';
+                    tdWrapper.style.width = "200px";
+                    tdWrapper.style.textAlign = "Left";
+                    //tdWrapper.innerHTML = '<marquee scrollamount="3" >' + tdValues[c] + '<marquee>';
                 }
                 trWrapper.appendChild(tdWrapper);
             }

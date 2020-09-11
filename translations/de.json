@@ -7,5 +7,6 @@
     "NOW": "sofort",
     "MINUTE": "Min",
     "HOUR": "Std",
-    "TRACK": "Gleis"
+    "TRACK": "Gleis",
+    "DELAYMSG": "Verspätungs Msg"
   }

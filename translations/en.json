@@ -7,5 +7,6 @@
     "NOW": "now",
     "MINUTE": "Min",
     "HOUR": "h",
-    "TRACK": "Track"
+    "TRACK": "Track",
+    "DELAYMSG": "Delay Msg"
   }
