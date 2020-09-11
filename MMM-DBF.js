@@ -19,12 +19,15 @@ Module.register("MMM-DBF", {
         showRealTime: false,
         onlyArrivalTime: false,
         numberOfResults: 10,
+        scrollAfter: 0,
         hideLowDelay: false,
         withoutDestination: '',
         onlyDestination: '',
         train: '',
         height:"600px",
-		width:"400px",
+        width:"400px",
+        setTableWidth: "",
+        timeOption: "time+countdown" // time+countdown or countdown
     },
 
     requiresVersion: "2.1.0",
@@ -134,6 +137,9 @@ Module.register("MMM-DBF", {
         tableWrapper.className = "small mmm-dbf-table";
         if (this.dataRequest) {
             if (!this.dataRequest.error) {
+                if (this.config.setTableWidth) {
+                    tableWrapper.style.width = this.config.setTableWidth;
+                }
                 let departures = this.dataRequest["departures"]
                 let tableHead= this.createTableHeader(departures);
                 tableWrapper.appendChild(tableHead);   
@@ -220,7 +226,6 @@ Module.register("MMM-DBF", {
      * @description Check if train is in list config.train
      * @param {Object} train 
      */
-    // TODOOOOO
     checkTrain: function(train) {
         let trains = this.config.train.split(",")
         let trainName = train["train"].split(" ")[0]+train["train"].split(" ")[1];
@@ -230,6 +235,32 @@ Module.register("MMM-DBF", {
             }
         }
         return false;
+    },
+
+    /**
+	 * @description Checks time and return day/hour/mins
+	 * @param {int} time - Time diff
+	 */
+	convertTime: function (scheduledTime) {
+		let time = this.calculateTime(scheduledTime);
+		if (time >= 3600) {
+            let strTime = (Math.floor(time / 3600)).toString();
+            return "+" + strTime + " " + this.translate("HOUR");
+		}
+		if (time >= 60) {
+			let strTime = (Math.floor(time / 60)).toString();
+			return strTime + " " + this.translate("MINUTE");
+        } else {
+            return this.translate("NOW");
+        }
+	},
+
+    calculateTime: function(scheduledTime) {
+        let d = new Date();
+        let time = scheduledTime.split(":");
+        let dateTrain = new Date(d.getFullYear(),d.getMonth(),d.getDate(),time[0],time[1])
+        let newStamp = new Date().getTime();
+        return Math.round((dateTrain.getTime()-newStamp)/1000);;
     },
 
     /**
@@ -278,7 +309,11 @@ Module.register("MMM-DBF", {
         let count = 0;
         for (let index = 0; index < size; index++) {
             let obj = departures[index];
+<<<<<<< HEAD
 
+=======
+            console.log(obj);
+>>>>>>> newOptions
             let trWrapper = document.createElement("tr");
             trWrapper.className = 'tr';
 
@@ -325,10 +360,24 @@ Module.register("MMM-DBF", {
                 }
             }
 
+            let time;
             if (this.config.onlyArrivalTime) {
-                tdValues.push(obj.scheduledArrival);
+                time = obj.scheduledArrival;
             }else {
-                tdValues.push(obj.scheduledDeparture);
+                time = obj.scheduledDeparture;
+            }
+
+            let remainingTime = this.convertTime(time);
+            switch (this.config.timeOption) {
+                case "time+countdown":
+                    tdValues.push(time+ " ("+ remainingTime + ")");
+                    break;
+                case "countdown":
+                    tdValues.push(remainingTime);
+                    break;
+                default:
+                    tdValues.push(time);
+                    break;
             }
             
             if(this.checkDelayExist(departures)){
@@ -344,7 +393,12 @@ Module.register("MMM-DBF", {
             count++;
             for (let c = 0; c < tdValues.length; c++) {
                 let tdWrapper = document.createElement("td");
-                tdWrapper.innerHTML = tdValues[c];
+
+                if (tdValues[c].length > this.config.scrollAfter && this.config.scrollAfter > 0) {
+                    tdWrapper.innerHTML = '<marquee scrollamount="3" >' + tdValues[c] + '<marquee>';
+                } else {
+                    tdWrapper.innerHTML = tdValues[c];
+                }
 
                 if (c === this.getColDelay()) {
                     tdWrapper.className = 'delay';

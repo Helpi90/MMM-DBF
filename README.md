@@ -71,4 +71,6 @@ var config = {
 | `numberOfResults` | `10` | *Optional* <br/> Number of results to be displayed
 | `withoutDestination` | `''` | *Optional* <br/> Show results without destination. Supports multiple strings, separated by comma (","). (e.g. "Duisburg Hbf,Venlo" )
 | `onlyDestination` | `''` | *Optional* <br/> Only show results wit destination. Supports multiple strings, separated by comma (","). (e.g. "Duisburg Hbf,Venlo" )
-| `train` | `''` | *Optional* <br/> Only show trains that start with the given string. Supports multiple strings, separated by comma (","). (e.g. "RB33,S"] )
+| `train` | `''` | *Optional* <br/> Only show trains that start with the given string. Supports multiple strings, separated by comma (","). (e.g. "RB33,S" )
+| `setTableWidth` | `''` | *Optional* <br/> Sets the width of the table in pixel (e.g. "400px" )
+| `timeOption` | `time` | *Optional* <br/> Changes the type of time <br/> (Options : `time` , `time+countdown` and `countdown`)
