@@ -20,7 +20,8 @@ Module.register("MMM-DBF", {
         onlyArrivalTime: false,
         numberOfResults: 10,
         hideLowDelay: false,
-        withoutDestination: [],
+        withoutDestination: 'Venlo,Essen Hbf',
+        train: '',
         height:"600px",
 		width:"400px",
     },
@@ -199,6 +200,43 @@ Module.register("MMM-DBF", {
     },
 
     /**
+     * @description Check if destination is in list config.withoutDestination
+     * @param {Object} train 
+     */
+    checkDestination: function(train) {
+        if(this.config.withoutDestination !== ""){
+            let destinations = this.config.withoutDestination.split(",")
+            for (let index = 0; index < destinations.length; index++) {
+                if (train['destination'] === destinations[index]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    },
+
+    /**
+     * @description Check if train is in list config.train
+     * @param {Object} train 
+     */
+    // TODOOOOO
+    checkTrain: function(train) {
+        if (this.config.train !== '') {
+            let trains = this.config.train.split(",")
+            let trainName = train["train"].split(" ")[0]+train["train"].split(" ")[1];
+            for (let i = 0; i < trains.length; i++) {
+                console.log(trainName + " === "+trains[i])
+                if(trainName.includes(trains[i])) {
+                    return true;
+                }
+            }
+            console.log("FALSE");
+            return false;
+        }
+        return true;
+    },
+
+    /**
      * @description Creates the header for the Table
      */
     createTableHeader: function (departures) {
@@ -241,26 +279,56 @@ Module.register("MMM-DBF", {
     createTableContent: function (departures, tableWrapper) {
         let self = this;
         let size = this.getSize(departures);
+        let foundTrain = false;
+        let foundDestination = false;
         for (let index = 0; index < size; index++) {
             let obj = departures[index];
             console.log(obj);
-            if(self.config.withoutDestination.length > 0){
-                let found = false;
-                for (let index = 0; index < self.config.withoutDestination.length; index++) {
-                    if (obj['destination'] === self.config.withoutDestination[index]) {
-                        found = true;
-                    }
-                }
-                if (found == true) {
-                    if (size+1 <= departures.length) {
-                        size+=1;
-                    }
-                    continue;
-                }
-            }
-             
+
             let trWrapper = document.createElement("tr");
             trWrapper.className = 'tr';
+
+            // Check train
+            if (!this.checkTrain(obj)) {
+                if (size+1 <= departures.length) {
+                    size+=1;
+                    continue;
+                } else if(size === departures.length) {
+                    continue;
+                }
+                
+            }else {
+                foundTrain = true;
+            }
+            if (foundTrain === false && this.config.train !== "") {
+                let tdWrapper = document.createElement("td");
+                tdWrapper.innerHTML = "Train not found";
+                trWrapper.appendChild(tdWrapper);
+                tableWrapper.appendChild(trWrapper);
+                console.log("Train not found");
+                return;
+            }
+            
+            if (this.checkDestination(obj)) {
+                if (size+1 <= departures.length) {
+                    size+=1;
+                    continue;
+                } else if (size === departures.length) {
+                    continue;
+                }
+            }else {
+                foundDestination = true;
+            }
+            /*
+            if (foundDestination === true && this.config.withoutDestination !== "") {
+                let tdWrapper = document.createElement("td");
+                tdWrapper.innerHTML = "Destination not found";
+                trWrapper.appendChild(tdWrapper);
+                tableWrapper.appendChild(trWrapper);
+                console.log("Destination not found");
+                return;
+            }
+            */
 
             let tdValues = [
                 obj.train,
