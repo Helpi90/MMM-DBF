@@ -69,4 +69,6 @@ var config = {
 | **Option** | **Default**  | **Description** |
 | --- | ---  | --- |
 | `numberOfResults` | `10` | *Optional* <br/> Number of results to be displayed
-| `withoutDestination` | `[]` | *Optional* <br/> Only show results without destination. Supports a list of strings, separated by comma (",").
+| `withoutDestination` | `''` | *Optional* <br/> Show results without destination. Supports multiple strings, separated by comma (","). (e.g. "Duisburg Hbf,Venlo" )
+| `onlyDestination` | `''` | *Optional* <br/> Only show results wit destination. Supports multiple strings, separated by comma (","). (e.g. "Duisburg Hbf,Venlo" )
+| `train` | `''` | *Optional* <br/> Only show trains that start with the given string. Supports multiple strings, separated by comma (","). (e.g. "RB33,S"] )
