@@ -20,7 +20,8 @@ Module.register("MMM-DBF", {
         onlyArrivalTime: false,
         numberOfResults: 10,
         hideLowDelay: false,
-        withoutDestination: 'Venlo,Essen Hbf',
+        withoutDestination: '',
+        onlyDestination: 'Venlo,Essen Hbf',
         train: '',
         height:"600px",
 		width:"400px",
@@ -187,7 +188,6 @@ Module.register("MMM-DBF", {
      */
     getViaFromRoute: function(train) {
         let viaConfigList = this.config.via.split(",");
-        console.log(viaConfigList);
         let route = train["via"];
         for (let i = 0; i < route.length; i++) {
             const city = route[i];
@@ -203,9 +203,9 @@ Module.register("MMM-DBF", {
      * @description Check if destination is in list config.withoutDestination
      * @param {Object} train 
      */
-    checkDestination: function(train) {
-        if(this.config.withoutDestination !== ""){
-            let destinations = this.config.withoutDestination.split(",")
+    checkDestination: function(train,destinationConfig) {
+        if(destinationConfig !== ""){
+            let destinations = destinationConfig.split(",")
             for (let index = 0; index < destinations.length; index++) {
                 if (train['destination'] === destinations[index]) {
                     return true;
@@ -225,12 +225,10 @@ Module.register("MMM-DBF", {
             let trains = this.config.train.split(",")
             let trainName = train["train"].split(" ")[0]+train["train"].split(" ")[1];
             for (let i = 0; i < trains.length; i++) {
-                console.log(trainName + " === "+trains[i])
                 if(trainName.includes(trains[i])) {
                     return true;
                 }
             }
-            console.log("FALSE");
             return false;
         }
         return true;
@@ -283,7 +281,7 @@ Module.register("MMM-DBF", {
         let foundDestination = false;
         for (let index = 0; index < size; index++) {
             let obj = departures[index];
-            console.log(obj);
+            //console.log(obj);
 
             let trWrapper = document.createElement("tr");
             trWrapper.className = 'tr';
@@ -300,6 +298,7 @@ Module.register("MMM-DBF", {
             }else {
                 foundTrain = true;
             }
+
             if (foundTrain === false && this.config.train !== "") {
                 let tdWrapper = document.createElement("td");
                 tdWrapper.innerHTML = "Train not found";
@@ -309,7 +308,16 @@ Module.register("MMM-DBF", {
                 return;
             }
             
-            if (this.checkDestination(obj)) {
+            if (this.checkDestination(obj,this.config.withoutDestination)) {
+                if (size+1 <= departures.length) {
+                    size+=1;
+                    continue;
+                } else if (size === departures.length) {
+                    continue;
+                }
+            }
+
+            if (!this.checkDestination(obj,this.config.onlyDestination)) {
                 if (size+1 <= departures.length) {
                     size+=1;
                     continue;
@@ -319,8 +327,8 @@ Module.register("MMM-DBF", {
             }else {
                 foundDestination = true;
             }
-            /*
-            if (foundDestination === true && this.config.withoutDestination !== "") {
+
+            if (foundDestination === false && this.config.onlyDestination !== "") {
                 let tdWrapper = document.createElement("td");
                 tdWrapper.innerHTML = "Destination not found";
                 trWrapper.appendChild(tdWrapper);
@@ -328,7 +336,6 @@ Module.register("MMM-DBF", {
                 console.log("Destination not found");
                 return;
             }
-            */
 
             let tdValues = [
                 obj.train,
