@@ -66,7 +66,6 @@ Module.register("MMM-DBF", {
         this.loaded = false;
         // Schedule update timer.
         this.getData();
-        console.log(this.gennerateUrl());
     },
 
     /**
@@ -135,7 +134,6 @@ Module.register("MMM-DBF", {
         tableWrapper.className = "small mmm-dbf-table";
         if (this.dataRequest) {
             if (!this.dataRequest.error) {
-                console.log(this.dataRequest);
                 let departures = this.dataRequest["departures"]
                 let tableHead= this.createTableHeader(departures);
                 tableWrapper.appendChild(tableHead);   
@@ -280,7 +278,6 @@ Module.register("MMM-DBF", {
         let count = 0;
         for (let index = 0; index < size; index++) {
             let obj = departures[index];
-            console.log(obj);
 
             let trWrapper = document.createElement("tr");
             trWrapper.className = 'tr';
