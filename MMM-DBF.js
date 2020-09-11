@@ -255,6 +255,10 @@ Module.register("MMM-DBF", {
         }
 	},
 
+    /**
+     * @description Calculate remaining time
+     * @param {int:int} scheduledTime 
+     */
     calculateTime: function(scheduledTime) {
         let d = new Date();
         let time = scheduledTime.split(":");
