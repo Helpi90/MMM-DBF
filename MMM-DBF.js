@@ -21,7 +21,7 @@ Module.register("MMM-DBF", {
         numberOfResults: 10,
         hideLowDelay: false,
         withoutDestination: '',
-        onlyDestination: 'Venlo,Essen Hbf',
+        onlyDestination: '',
         train: '',
         height:"600px",
 		width:"400px",
@@ -134,10 +134,16 @@ Module.register("MMM-DBF", {
         let tableWrapper = document.createElement("table");
         tableWrapper.className = "small mmm-dbf-table";
         if (this.dataRequest) {
-            let departures = this.dataRequest["departures"]
-            let tableHead= this.createTableHeader(departures);
-            tableWrapper.appendChild(tableHead);   
-            this.createTableContent(departures, tableWrapper); 
+            if (!this.dataRequest.error) {
+                console.log(this.dataRequest);
+                let departures = this.dataRequest["departures"]
+                let tableHead= this.createTableHeader(departures);
+                tableWrapper.appendChild(tableHead);   
+                this.createTableContent(departures, tableWrapper); 
+            } else {
+                Log.error(this.dataRequest.error);
+            }
+
         }
         return tableWrapper;
     },
@@ -204,12 +210,10 @@ Module.register("MMM-DBF", {
      * @param {Object} train 
      */
     checkDestination: function(train,destinationConfig) {
-        if(destinationConfig !== ""){
-            let destinations = destinationConfig.split(",")
-            for (let index = 0; index < destinations.length; index++) {
-                if (train['destination'] === destinations[index]) {
-                    return true;
-                }
+        let destinations = destinationConfig.split(",")
+        for (let index = 0; index < destinations.length; index++) {
+            if (train['destination'] === destinations[index]) {
+                return true;
             }
         }
         return false;
@@ -221,17 +225,14 @@ Module.register("MMM-DBF", {
      */
     // TODOOOOO
     checkTrain: function(train) {
-        if (this.config.train !== '') {
-            let trains = this.config.train.split(",")
-            let trainName = train["train"].split(" ")[0]+train["train"].split(" ")[1];
-            for (let i = 0; i < trains.length; i++) {
-                if(trainName.includes(trains[i])) {
-                    return true;
-                }
+        let trains = this.config.train.split(",")
+        let trainName = train["train"].split(" ")[0]+train["train"].split(" ")[1];
+        for (let i = 0; i < trains.length; i++) {
+            if(trainName.includes(trains[i])) {
+                return true;
             }
-            return false;
         }
-        return true;
+        return false;
     },
 
     /**
@@ -277,38 +278,25 @@ Module.register("MMM-DBF", {
     createTableContent: function (departures, tableWrapper) {
         let self = this;
         let size = this.getSize(departures);
-        let foundTrain = false;
-        let foundDestination = false;
+        let count = 0;
         for (let index = 0; index < size; index++) {
             let obj = departures[index];
-            //console.log(obj);
+            console.log(obj);
 
             let trWrapper = document.createElement("tr");
             trWrapper.className = 'tr';
 
             // Check train
-            if (!this.checkTrain(obj)) {
+            if (this.config.train !== "" && !this.checkTrain(obj)) {
                 if (size+1 <= departures.length) {
                     size+=1;
                     continue;
                 } else if(size === departures.length) {
                     continue;
                 }
-                
-            }else {
-                foundTrain = true;
-            }
-
-            if (foundTrain === false && this.config.train !== "") {
-                let tdWrapper = document.createElement("td");
-                tdWrapper.innerHTML = "Train not found";
-                trWrapper.appendChild(tdWrapper);
-                tableWrapper.appendChild(trWrapper);
-                console.log("Train not found");
-                return;
             }
             
-            if (this.checkDestination(obj,this.config.withoutDestination)) {
+            if (this.config.withoutDestination !== "" && this.checkDestination(obj,this.config.withoutDestination)) {
                 if (size+1 <= departures.length) {
                     size+=1;
                     continue;
@@ -316,25 +304,14 @@ Module.register("MMM-DBF", {
                     continue;
                 }
             }
-
-            if (!this.checkDestination(obj,this.config.onlyDestination)) {
+            
+            if (this.config.onlyDestination !== "" &&  !this.checkDestination(obj,this.config.onlyDestination)) {
                 if (size+1 <= departures.length) {
                     size+=1;
                     continue;
                 } else if (size === departures.length) {
                     continue;
                 }
-            }else {
-                foundDestination = true;
-            }
-
-            if (foundDestination === false && this.config.onlyDestination !== "") {
-                let tdWrapper = document.createElement("td");
-                tdWrapper.innerHTML = "Destination not found";
-                trWrapper.appendChild(tdWrapper);
-                tableWrapper.appendChild(trWrapper);
-                console.log("Destination not found");
-                return;
             }
 
             let tdValues = [
@@ -368,10 +345,9 @@ Module.register("MMM-DBF", {
                     tdValues.push(delay);
                 }
             }
-
+            count++;
             for (let c = 0; c < tdValues.length; c++) {
                 let tdWrapper = document.createElement("td");
-
                 tdWrapper.innerHTML = tdValues[c];
 
                 if (c === this.getColDelay()) {
@@ -379,6 +355,26 @@ Module.register("MMM-DBF", {
                 }
                 trWrapper.appendChild(tdWrapper);
             }
+            tableWrapper.appendChild(trWrapper);
+        }
+        if (count === 0) {
+            let trWrapper = document.createElement("tr");
+            trWrapper.className = 'tr';
+            let tdWrapper = document.createElement("td");
+
+            if (this.config.onlyDestination !== "" && this.config.train !== "") {
+                tdWrapper.innerHTML = "Destination or train not found";
+                Log.error("Destination or train not found");
+            }
+            else if (this.config.onlyDestination !== "") { 
+                tdWrapper.innerHTML = "Destination not found";
+                Log.error("Destination not found");
+            } else if (this.config.train !== "") {
+                tdWrapper.innerHTML = "Train not found";
+                Log.error("Train not found");
+            }
+
+            trWrapper.appendChild(tdWrapper);
             tableWrapper.appendChild(trWrapper);
         }
     },
