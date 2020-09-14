@@ -37,6 +37,7 @@ var config = {
                 station: "Düsseldorf Hbf",
                 height:"600px",
                 width:"400px",
+                timeOption: "time+countdown",
             }
         }
     ]
