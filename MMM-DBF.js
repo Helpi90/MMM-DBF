@@ -23,36 +23,36 @@ Module.register("MMM-DBF", {
         withoutDestination: '',
         onlyDestination: '',
         train: '',
-        height:"600px",
-        width:"400px",
+        height: "600px",
+        width: "400px",
         setTableWidth: "",
         timeOption: "time", // time+countdown or countdown
         showDelayMsg: false
     },
 
     requiresVersion: "2.1.0",
-    
+
     /**
      * @description Helper function to generate API url
      * 
      * @returns {String} url
      */
-    gennerateUrl: function() {
+    gennerateUrl: function () {
         let base_url = "https://dbf.finalrewind.org/";
-        base_url+= this.config.station + "?platforms=" + this.config.platform + "&via=" + this.config.via +"&hide_opts=1";
+        base_url += this.config.station + "?platforms=" + this.config.platform + "&via=" + this.config.via + "&hide_opts=1";
         if (this.config.showArrivalTime) {
-            base_url+="&detailed=1";
+            base_url += "&detailed=1";
         }
         if (this.config.showRealTime) {
-            base_url+="&show_realtime=1";
+            base_url += "&show_realtime=1";
         }
         if (this.config.onlyArrivalTime) {
-            base_url+= "&admode=dep";
-        }else {
-            base_url+= "&admode=dep";
+            base_url += "&admode=dep";
+        } else {
+            base_url += "&admode=dep";
         }
         if (this.config.hideLowDelay) {
-            base_url+= "&hidelowdelay=1"
+            base_url += "&hidelowdelay=1"
         }
         return base_url;
     },
@@ -77,7 +77,7 @@ Module.register("MMM-DBF", {
     getData: function () {
         let self = this;
 
-        let urlApi = this.gennerateUrl()+"&mode=json&version=3";
+        let urlApi = this.gennerateUrl() + "&mode=json&version=3";
         let retry = true;
 
         let dataRequest = new XMLHttpRequest();
@@ -130,7 +130,7 @@ Module.register("MMM-DBF", {
             iframe.style = "border:0";
             iframe.width = this.config.width;
             iframe.height = this.config.height;
-            iframe.src =  this.gennerateUrl();
+            iframe.src = this.gennerateUrl();
             return iframe;
         }
         let tableWrapper = document.createElement("table");
@@ -141,9 +141,9 @@ Module.register("MMM-DBF", {
                     tableWrapper.style.width = this.config.setTableWidth;
                 }
                 let departures = this.dataRequest["departures"]
-                let tableHead= this.createTableHeader(departures);
-                tableWrapper.appendChild(tableHead);   
-                this.createTableContent(departures, tableWrapper); 
+                let tableHead = this.createTableHeader(departures);
+                tableWrapper.appendChild(tableHead);
+                this.createTableContent(departures, tableWrapper);
             } else {
                 Log.error(this.dataRequest.error);
             }
@@ -155,10 +155,10 @@ Module.register("MMM-DBF", {
      * @description Get the size for showing entrys
      * @param {Object[]} departures 
      */
-    getSize: function(departures) {
+    getSize: function (departures) {
         if (departures.length < this.config.numberOfResults) {
             return departures.length;
-        }else {
+        } else {
             return this.config.numberOfResults;
         }
     },
@@ -167,7 +167,7 @@ Module.register("MMM-DBF", {
      * @description Check delay exist
      * @param {Object[]} departures 
      */
-    checkDelayExist: function(departures){
+    checkDelayExist: function (departures) {
         for (let index = 0; index < this.getSize(departures); index++) {
             if (departures[index]["delayDeparture"]) {
                 if (this.config.hideLowDelay && departures[index]["delayDeparture"] >= 5) {
@@ -184,10 +184,10 @@ Module.register("MMM-DBF", {
     /**
      * @description Get col number
      */
-    getColDelay: function() {
+    getColDelay: function () {
         if (this.config.via !== "") {
             return 5;
-        }else {
+        } else {
             return 4;
         }
     },
@@ -195,13 +195,13 @@ Module.register("MMM-DBF", {
     /**
      * @param {Object} train 
      */
-    getViaFromRoute: function(train) {
+    getViaFromRoute: function (train) {
         let viaConfigList = this.config.via.split(",");
         let route = train["via"];
         for (let i = 0; i < route.length; i++) {
             const city = route[i];
             for (let j = 0; j < viaConfigList.length; j++) {
-                if(city.includes(viaConfigList[j])) {
+                if (city.includes(viaConfigList[j])) {
                     return viaConfigList[j];
                 }
             }
@@ -212,7 +212,7 @@ Module.register("MMM-DBF", {
      * @description Check if destination is in list config.withoutDestination
      * @param {Object} train 
      */
-    checkDestination: function(train,destinationConfig) {
+    checkDestination: function (train, destinationConfig) {
         let destinations = destinationConfig.split(",")
         for (let index = 0; index < destinations.length; index++) {
             if (train['destination'] === destinations[index]) {
@@ -226,11 +226,11 @@ Module.register("MMM-DBF", {
      * @description Check if train is in list config.train
      * @param {Object} train 
      */
-    checkTrain: function(train) {
+    checkTrain: function (train) {
         let trains = this.config.train.split(",")
-        let trainName = train["train"].split(" ")[0]+train["train"].split(" ")[1];
+        let trainName = train["train"].split(" ")[0] + train["train"].split(" ")[1];
         for (let i = 0; i < trains.length; i++) {
-            if(trainName.includes(trains[i])) {
+            if (trainName.includes(trains[i])) {
                 return true;
             }
         }
@@ -238,40 +238,40 @@ Module.register("MMM-DBF", {
     },
 
     /**
-	 * @description Checks time and return day/hour/mins
-	 * @param {int} time - Remaining time
-	 */
-	convertTime: function (scheduledTime) {
-		let time = this.calculateTime(scheduledTime);
-		if (time >= 3600) {
+     * @description Checks time and return day/hour/mins
+     * @param {int} time - Remaining time
+     */
+    convertTime: function (scheduledTime) {
+        let time = this.calculateTime(scheduledTime);
+        if (time >= 3600) {
             let strTime = (Math.floor(time / 3600)).toString();
             return "+" + strTime + " " + this.translate("HOUR");
-		}
-		if (time >= 60) {
-			let strTime = (Math.floor(time / 60)).toString();
-			return strTime + " " + this.translate("MINUTE");
+        }
+        if (time >= 60) {
+            let strTime = (Math.floor(time / 60)).toString();
+            return strTime + " " + this.translate("MINUTE");
         } else {
             return this.translate("NOW");
         }
-	},
+    },
 
     /**
      * @description Calculate remaining time
      * @param {int:int} scheduledTime 
      */
-    calculateTime: function(scheduledTime) {
+    calculateTime: function (scheduledTime) {
         let d = new Date();
         let time = scheduledTime.split(":");
-        let dateTrain = new Date(d.getFullYear(),d.getMonth(),d.getDate(),time[0],time[1])
+        let dateTrain = new Date(d.getFullYear(), d.getMonth(), d.getDate(), time[0], time[1])
         let newStamp = new Date().getTime();
-        return Math.round((dateTrain.getTime()-newStamp)/1000);;
+        return Math.round((dateTrain.getTime() - newStamp) / 1000);;
     },
 
     /**
      * @description Check msg exists
      * @param {Object[]} departures 
      */
-    checkMsgExist: function(departures) {
+    checkMsgExist: function (departures) {
         for (let index = 0; index < this.getSize(departures); index++) {
             if (departures[index] !== undefined && departures[index]["messages"]["delay"].length > 0) {
                 return true;
@@ -301,8 +301,8 @@ Module.register("MMM-DBF", {
         } else {
             tableHeadValues.push(this.translate('ARRIVAL'));
         }
-        
-        if(this.checkDelayExist(departures)){
+
+        if (this.checkDelayExist(departures)) {
             let delayClockIcon = '<i class="fa fa-clock-o"></i>';
             tableHeadValues.push(delayClockIcon);
         }
@@ -338,26 +338,26 @@ Module.register("MMM-DBF", {
             this.checkMsgExist(obj);
             // Check train
             if (this.config.train !== "" && !this.checkTrain(obj)) {
-                if (size+1 <= departures.length) {
-                    size+=1;
-                    continue;
-                } else if(size === departures.length) {
-                    continue;
-                }
-            }
-            
-            if (this.config.withoutDestination !== "" && this.checkDestination(obj,this.config.withoutDestination)) {
-                if (size+1 <= departures.length) {
-                    size+=1;
+                if (size + 1 <= departures.length) {
+                    size += 1;
                     continue;
                 } else if (size === departures.length) {
                     continue;
                 }
             }
-            
-            if (this.config.onlyDestination !== "" &&  !this.checkDestination(obj,this.config.onlyDestination)) {
-                if (size+1 <= departures.length) {
-                    size+=1;
+
+            if (this.config.withoutDestination !== "" && this.checkDestination(obj, this.config.withoutDestination)) {
+                if (size + 1 <= departures.length) {
+                    size += 1;
+                    continue;
+                } else if (size === departures.length) {
+                    continue;
+                }
+            }
+
+            if (this.config.onlyDestination !== "" && !this.checkDestination(obj, this.config.onlyDestination)) {
+                if (size + 1 <= departures.length) {
+                    size += 1;
                     continue;
                 } else if (size === departures.length) {
                     continue;
@@ -372,9 +372,9 @@ Module.register("MMM-DBF", {
 
             if (this.config.via !== "") {
                 let via = this.getViaFromRoute(obj);
-                if(via === undefined) {
+                if (via === undefined) {
                     continue;
-                }else {
+                } else {
                     tdValues.push(this.getViaFromRoute(obj));
                 }
             }
@@ -382,14 +382,14 @@ Module.register("MMM-DBF", {
             let time;
             if (this.config.onlyArrivalTime) {
                 time = obj.scheduledArrival;
-            }else {
+            } else {
                 time = obj.scheduledDeparture;
             }
 
             let remainingTime = this.convertTime(time);
             switch (this.config.timeOption) {
                 case "time+countdown":
-                    tdValues.push(time+ " ("+ remainingTime + ")");
+                    tdValues.push(time + " (" + remainingTime + ")");
                     break;
                 case "countdown":
                     tdValues.push(remainingTime);
@@ -398,9 +398,9 @@ Module.register("MMM-DBF", {
                     tdValues.push(time);
                     break;
             }
-            
-            if(this.checkDelayExist(departures)){
-                if(obj.delayDeparture > 0 && !this.config.hideLowDelay){
+
+            if (this.checkDelayExist(departures)) {
+                if (obj.delayDeparture > 0 && !this.config.hideLowDelay) {
                     let delay = ' +' + obj.delayDeparture;
                     tdValues.push(delay);
                 }
@@ -410,7 +410,7 @@ Module.register("MMM-DBF", {
                 }
             }
 
-            if (this.config.showDelayMsg && this.checkMsgExist(departures) && obj.delayDeparture > 0 )  {
+            if (this.config.showDelayMsg && this.checkMsgExist(departures) && obj.delayDeparture > 0) {
                 if (obj["messages"]["delay"].length > 0) {
                     tdValues.push(obj["messages"]["delay"][0].text);
                 }
@@ -443,7 +443,7 @@ Module.register("MMM-DBF", {
                 tdWrapper.innerHTML = "Destination or train not found";
                 Log.error("Destination or train not found");
             }
-            else if (this.config.onlyDestination !== "") { 
+            else if (this.config.onlyDestination !== "") {
                 tdWrapper.innerHTML = "Destination not found";
                 Log.error("Destination not found");
             } else if (this.config.train !== "") {
@@ -490,7 +490,7 @@ Module.register("MMM-DBF", {
         // send notification to helper
         this.sendSocketNotification("MMM-DBF-NOTIFICATION_TEST", "data");
     },
-    
+
     /**
      * @description Handle notification
      * @param {*} notification 
