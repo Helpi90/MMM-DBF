@@ -19,7 +19,6 @@ Module.register("MMM-DBF", {
         showRealTime: false,
         onlyArrivalTime: false,
         numberOfResults: 10,
-        scrollAfter: 0,
         hideLowDelay: false,
         withoutDestination: '',
         onlyDestination: '',
@@ -27,7 +26,7 @@ Module.register("MMM-DBF", {
         height:"600px",
         width:"400px",
         setTableWidth: "",
-        timeOption: "time+countdown", // time+countdown or countdown
+        timeOption: "time", // time+countdown or countdown
         showDelayMsg: false
     },
 
@@ -420,11 +419,7 @@ Module.register("MMM-DBF", {
             count++;
             for (let c = 0; c < tdValues.length; c++) {
                 let tdWrapper = document.createElement("td");
-                if (tdValues[c].length > this.config.scrollAfter && this.config.scrollAfter > 0) {
-                    tdWrapper.innerHTML = '<marquee scrollamount="3" >' + tdValues[c] + '<marquee>';
-                } else {
-                    tdWrapper.innerHTML = tdValues[c];
-                }
+                tdWrapper.innerHTML = tdValues[c];
 
                 if (c === this.getColDelay()) {
                     tdWrapper.className = 'delay';
