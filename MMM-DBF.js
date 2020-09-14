@@ -28,7 +28,7 @@ Module.register("MMM-DBF", {
         width:"400px",
         setTableWidth: "",
         timeOption: "time+countdown", // time+countdown or countdown
-        showDelayMsg: true
+        showDelayMsg: false
     },
 
     requiresVersion: "2.1.0",
@@ -430,7 +430,6 @@ Module.register("MMM-DBF", {
                     tdWrapper.className = 'delay';
                 }
                 if (c === this.getColDelay() + 1) {
-                    console.log(tdValues[c].length);
                     tdWrapper.className = 'delay';
                     tdWrapper.style.width = "200px";
                     tdWrapper.style.textAlign = "Left";

@@ -74,3 +74,4 @@ var config = {
 | `train` | `''` | *Optional* <br/> Only show trains that start with the given string. Supports multiple strings, separated by comma (","). (e.g. "RB33,S" )
 | `setTableWidth` | `''` | *Optional* <br/> Sets the width of the table in pixel (e.g. "400px" )
 | `timeOption` | `time` | *Optional* <br/> Changes the type of time <br/> (Options : `time` , `time+countdown` and `countdown`)
+| `showDelayMsg` | `false` | *Optional* <br/> Boolean to show delay massages or not. 
