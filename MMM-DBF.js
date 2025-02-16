@@ -182,6 +182,24 @@ Module.register("MMM-DBF", {
     },
 
     /**
+    * @description Check cancelled exist
+    * @param {Object[]} departures 
+    */
+    checkCancelledExist: function (departures) {
+        for (let index = 0; index < this.getSize(departures); index++) {
+            if (departures[index]["isCancelled"]) {
+                if (this.config.hideLowDelay && departures[index]["isCancelled"] >= 1) {
+                    return true;
+                }
+                if (!this.config.hideLowDelay) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    },
+
+    /**
      * @description Get col number
      */
     getColDelay: function () {
@@ -302,7 +320,7 @@ Module.register("MMM-DBF", {
             tableHeadValues.push(this.translate('ARRIVAL'));
         }
 
-        if (this.checkDelayExist(departures)) {
+        if (this.checkDelayExist(departures) || this.checkCancelledExist(departures)) {
             let delayClockIcon = '<i class="fa fa-clock-o"></i>';
             tableHeadValues.push(delayClockIcon);
         }
@@ -399,7 +417,7 @@ Module.register("MMM-DBF", {
                     break;
             }
 
-            if (this.checkDelayExist(departures)) {
+            if (this.checkDelayExist(departures) || this.checkCancelledExist(departures)) {
                 if (obj.delayDeparture > 0 && !this.config.hideLowDelay) {
                     let delay = ' +' + obj.delayDeparture;
                     tdValues.push(delay);
@@ -407,6 +425,8 @@ Module.register("MMM-DBF", {
                 else if (obj.delayDeparture >= 5) {
                     let delay = ' +' + obj.delayDeparture;
                     tdValues.push(delay);
+                } else if (obj.isCancelled > 0) {
+                    tdValues.push(' Canc');
                 }
             }
 
