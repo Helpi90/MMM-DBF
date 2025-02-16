@@ -8,5 +8,6 @@
     "MINUTE": "Min",
     "HOUR": "Std",
     "TRACK": "Gleis",
-    "DELAYMSG": "Verspätungs Msg"
+    "DELAYMSG": "Verspätungs Msg",
+    "CANCELMSG": "Fällt aus"
   }

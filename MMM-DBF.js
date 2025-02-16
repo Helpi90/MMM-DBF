@@ -426,7 +426,7 @@ Module.register("MMM-DBF", {
                     let delay = ' +' + obj.delayDeparture;
                     tdValues.push(delay);
                 } else if (obj.isCancelled > 0) {
-                    tdValues.push(' Canc');
+                    tdValues.push(this.translate("CANCELMSG"));
                 }
             }
 

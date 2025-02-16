@@ -8,5 +8,6 @@
     "MINUTE": "Min",
     "HOUR": "h",
     "TRACK": "Track",
-    "DELAYMSG": "Delay Msg"
+    "DELAYMSG": "Delay Msg",
+    "CANCELMSG": "Canceled"
   }
