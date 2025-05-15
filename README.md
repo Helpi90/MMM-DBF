@@ -54,8 +54,8 @@ let config = {
 | ----------------- | ------------------ | ----------------------------------------------------------------------------------------- |
 | `station`         | `"Düsseldorf Hbf"` | _Required_ <br/>German Station Name [(Check possible name)](https://dbf.finalrewind.org/) |
 | `updateInterval`  | `60000`            | _Optional_ <br/>How often should the data be fetched.                                     |
-| `platform`        | `' '`              | _Optional_ <br/> Only show platform. Supports multiple strings, separated by comma (",")  |
-| `via`             | `' '`              | _Optional_ <br/> Only show routs via. Supports multiple strings, separated by comma (",") |
+| `platform`        | `""`               | _Optional_ <br/> Only show platform. Supports multiple strings, separated by comma (",")  |
+| `via`             | `""`               | _Optional_ <br/> Only show routs via. Supports multiple strings, separated by comma (",") |
 | `onlyArrivalTime` | `false`            | _Optional_ <br/> Boolean to show only ArrivalTime (at Station)                            |
 | `hideLowDelay`    | `false`            | _Optional_ <br/> Boolean to hide delay smaller 5 min                                      |
 
@@ -66,8 +66,8 @@ let config = {
 | **Option**        | **Default** | **Description**                                                                  |
 | ----------------- | ----------- | -------------------------------------------------------------------------------- |
 | `showApp`         | `false`     | _Required_ <br/> Activate app view                                               |
-| `height`          | `600px`     | _Optional_ <br/> The height of the App                                           |
-| `width`           | `400px`     | _Optional_ <br/> The width of the App                                            |
+| `height`          | `"600px"`   | _Optional_ <br/> The height of the App                                           |
+| `width`           | `"400px"`   | _Optional_ <br/> The width of the App                                            |
 | `showArrivalTime` | `false`     | _Optional_ <br/> Boolean to show arrival time too.                               |
 | `showRealTime`    | `false`     | _Optional_ <br/> Boolean to show real-time information instead of timetable data |
 
@@ -78,9 +78,9 @@ let config = {
 | **Option**           | **Default** | **Description**                                                                                                                           |
 | -------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | `numberOfResults`    | `10`        | _Optional_ <br/> Number of results to be displayed                                                                                        |
-| `withoutDestination` | `''`        | _Optional_ <br/> Show results without destination. Supports multiple strings, separated by comma (","). (e.g. "Duisburg Hbf,Venlo" )      |
-| `onlyDestination`    | `''`        | _Optional_ <br/> Only show results wit destination. Supports multiple strings, separated by comma (","). (e.g. "Duisburg Hbf,Venlo" )     |
-| `train`              | `''`        | _Optional_ <br/> Only show trains that start with the given string. Supports multiple strings, separated by comma (","). (e.g. "RB33,S" ) |
-| `setTableWidth`      | `''`        | _Optional_ <br/> Sets the width of the table in pixel (e.g. "400px" )                                                                     |
-| `timeOption`         | `time`      | _Optional_ <br/> Changes the type of time <br/> (Options : `time` , `time+countdown` and `countdown`)                                     |
+| `withoutDestination` | `""`        | _Optional_ <br/> Show results without destination. Supports multiple strings, separated by comma (","). (e.g. "Duisburg Hbf,Venlo" )      |
+| `onlyDestination`    | `""`        | _Optional_ <br/> Only show results wit destination. Supports multiple strings, separated by comma (","). (e.g. "Duisburg Hbf,Venlo" )     |
+| `train`              | `""`        | _Optional_ <br/> Only show trains that start with the given string. Supports multiple strings, separated by comma (","). (e.g. "RB33,S" ) |
+| `setTableWidth`      | `""`        | _Optional_ <br/> Sets the width of the table in pixel (e.g. "400px" )                                                                     |W
+| `timeOption`         | `"time"`    | _Optional_ <br/> Changes the type of time <br/> (Options : `time` , `time+countdown` and `countdown`)                                     |
 | `showDelayMsg`       | `false`     | _Optional_ <br/> Boolean to show delay massages or not.                                                                                   |
