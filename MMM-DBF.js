@@ -10,6 +10,7 @@
 Module.register("MMM-DBF", {
   defaults: {
     updateInterval: 60000, // 1 minute
+    retryDelay: 30000, // 30 seconds
     station: "Düsseldorf Hbf",
     platform: "",
     via: "",
@@ -71,7 +72,6 @@ Module.register("MMM-DBF", {
    */
   async getData() {
     const self = this;
-
     const urlApi = `${this.gennerateUrl()}&mode=json&version=3`;
     const dataRequest = await fetch(urlApi);
 
@@ -85,6 +85,7 @@ Module.register("MMM-DBF", {
       const data = await dataRequest.json();
       self.processData(data);
     }
+    self.scheduleUpdate(self.config.retryDelay);
   },
 
   /**
