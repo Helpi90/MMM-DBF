@@ -509,18 +509,5 @@ Module.register("MMM-DBF", {
         // the data if load
         // send notification to helper
         this.sendSocketNotification("MMM-DBF-NOTIFICATION_TEST", "data");
-    },
-
-    /**
-     * @description Handle notification
-     * @param {*} notification 
-     * @param {*} payload 
-     */
-    socketNotificationReceived: function (notification, payload) {
-        if (notification === "MMM-DBF-NOTIFICATION_TEST") {
-            // set dataNotification
-            this.dataNotification = payload;
-            //this.updateDom();
-        }
-    },
+    }
 });
