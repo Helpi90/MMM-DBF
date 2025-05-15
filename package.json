@@ -1,19 +1,28 @@
 {
-  "name": "Magic-Mirror-Module-DBF",
-  "version": "1.0.0",
+  "name": "mmm-dbf",
+  "version": "1.0.1",
   "description": "A module for the MagicMirror² is displays the next departure times and delays (with details) of Trains from any station in germany.",
   "main": "MMM-DBF.js",
   "author": "Marc Helpenstein <helpi9007@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "grunt": "latest",
-    "grunt-eslint": "latest",
-    "grunt-jsonlint": "latest",
-    "grunt-markdownlint": "^1.0.13",
-    "grunt-stylelint": "latest",
-    "grunt-yamllint": "latest",
-    "stylelint-config-standard": "latest",
-    "time-grunt": "latest"
+    "eslint": "^8.35.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-json": "^3.1.0",
+    "eslint-plugin-markdownlint": "^0.4.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "lint-staged": "^13.1.2",
+    "markdownlint": "^0.27.0",
+    "prettier": "^2.8.4",
+    "stylelint": "^15.2.0",
+    "stylelint-config-standard": "^30.0.1",
+    "stylelint-prettier": "^3.0.0"
+  },
+  "scripts": {
+    "lint": "eslint . && stylelint **/*.css && prettier --check .",
+    "lint:fix": "eslint --fix . && stylelint --fix **/*.css && prettier --write ."
   },
   "repository": {
     "type": "git",
