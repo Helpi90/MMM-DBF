@@ -1,24 +1,24 @@
-/*
- *
- * MMM-DBF
+/* MagicMirror²
+ * Module: MMM-DBF
  *
  * Steven Zemelka <hello@zemelka.codes>
  * MIT Licensed.
- *
- *
  */
- .mmm-dbf-table * {
-    padding-left: 20px;
-    padding-top: 5px;
+.mmm-dbf-table * {
+  padding-left: 20px;
+  padding-top: 5px;
 }
+
 .mmm-dbf-table tr.border-bottom th {
-    border-bottom: 1px solid #666;
-    padding-bottom: 5px;
-    margin-bottom: 10px;
+  border-bottom: 1px solid #666;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
 }
+
 .mmm-dbf-table *:first-child {
-    padding-left: 0;
+  padding-left: 0;
 }
+
 .mmm-dbf-table .delay {
-    color: red;
+  color: red;
 }
