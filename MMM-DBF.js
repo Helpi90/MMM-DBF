@@ -332,7 +332,7 @@ Module.register("MMM-DBF", {
     for (let index = 0; index < size; index += 1) {
       const obj = departures[index];
       const trWrapper = document.createElement("tr");
-      trWrapper.className = "tr";
+      trWrapper.className = obj.isCancelled ? 'tr cancelled' : 'tr'
       this.checkMsgExist(obj);
 
       // Check train
