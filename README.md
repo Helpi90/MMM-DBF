@@ -81,6 +81,6 @@ let config = {
 | `withoutDestination` | `""`        | _Optional_ <br/> Show results without destination. Supports multiple strings, separated by comma (","). (e.g. "Duisburg Hbf,Venlo" )      |
 | `onlyDestination`    | `""`        | _Optional_ <br/> Only show results wit destination. Supports multiple strings, separated by comma (","). (e.g. "Duisburg Hbf,Venlo" )     |
 | `train`              | `""`        | _Optional_ <br/> Only show trains that start with the given string. Supports multiple strings, separated by comma (","). (e.g. "RB33,S" ) |
-| `setTableWidth`      | `""`        | _Optional_ <br/> Sets the width of the table in pixel (e.g. "400px" )                                                                     |W
+| `setTableWidth`      | `""`        | _Optional_ <br/> Sets the width of the table in pixel (e.g. "400px" )                                                                     |
 | `timeOption`         | `"time"`    | _Optional_ <br/> Changes the type of time <br/> (Options : `time` , `time+countdown` and `countdown`)                                     |
 | `showDelayMsg`       | `false`     | _Optional_ <br/> Boolean to show delay massages or not.                                                                                   |
