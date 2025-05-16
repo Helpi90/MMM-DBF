@@ -1,13 +1,13 @@
 {
-    "TRAIN": "Train",
-    "VIA": "via",
-    "ARRIVAL": "Arrival",
-    "DESTINATION": "Destination",
-    "DEPARTURE": "Departure",
-    "NOW": "now",
-    "MINUTE": "Min",
-    "HOUR": "h",
-    "TRACK": "Track",
-    "DELAYMSG": "Delay Msg",
-    "CANCELMSG": "Canceled"
-  }
+  "TRAIN": "Train",
+  "VIA": "via",
+  "ARRIVAL": "Arrival",
+  "DESTINATION": "Destination",
+  "DEPARTURE": "Departure",
+  "NOW": "now",
+  "MINUTE": "Min",
+  "HOUR": "h",
+  "TRACK": "Track",
+  "DELAYMSG": "Delay Msg",
+  "CANCELMSG": "Canceled"
+}
