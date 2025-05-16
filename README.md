@@ -1,6 +1,6 @@
 # MMM-DBF (Deutsche Bahn Frontend)
 
-This is a module for the [MagicMirror²](https://github.com/MichMich/MagicMirror/).
+This is a module for the [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror/).
 
 It displays the next departure times and delays (with details) of trains from any city and station in Germany.
 
