@@ -28,11 +28,11 @@ Clone this repository in yours `~/MagicMirror/modules/`:
 
 `git clone https://github.com/Helpi90/MMM-DBF`
 
+## Configuration
+
 To use this module, add the following configuration block to the modules array in the `config/config.js` file:
 
 ```js
-let config = {
-  modules: [
     {
       module: "MMM-DBF",
       position: "top_right",
@@ -43,12 +43,10 @@ let config = {
         width: "400px",
         timeOption: "time+countdown"
       }
-    }
-  ]
-};
+    },
 ```
 
-## Configuration options for App and table
+### Configuration options for App and table
 
 | **Option**        | **Default**        | **Description**                                                                           |
 | ----------------- | ------------------ | ----------------------------------------------------------------------------------------- |
@@ -61,7 +59,7 @@ let config = {
 
 <br/>
 
-## Configuration options only for App view
+### Configuration options only for App view
 
 | **Option**        | **Default** | **Description**                                                                  |
 | ----------------- | ----------- | -------------------------------------------------------------------------------- |
@@ -73,7 +71,7 @@ let config = {
 
 <br/>
 
-## Configuration options only for table view
+### Configuration options only for table view
 
 | **Option**           | **Default** | **Description**                                                                                                                           |
 | -------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
