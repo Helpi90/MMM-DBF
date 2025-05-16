@@ -27,7 +27,7 @@ Module.register("MMM-DBF", {
     width: "400px",
     setTableWidth: "",
     timeOption: "time", // time+countdown or countdown
-    showDelayMsg: false
+    showDelayMsg: false,
   },
 
   requiresVersion: "2.1.0",
@@ -48,7 +48,8 @@ Module.register("MMM-DBF", {
     }
     if (this.config.onlyArrivalTime) {
       baseUrl += "&admode=dep";
-    } else {
+    }
+    else {
       baseUrl += "&admode=dep";
     }
     if (this.config.hideLowDelay) {
@@ -78,10 +79,11 @@ Module.register("MMM-DBF", {
     if (!dataRequest.ok) {
       let message = `An error has occured: ${dataRequest.status}`;
       if (dataRequest.status === 300) {
-        message += ` - Ambiguous station name.`;
+        message += " - Ambiguous station name.";
       }
       throw new Error(message);
-    } else {
+    }
+    else {
       const data = await dataRequest.json();
       self.processData(data);
     }
@@ -132,7 +134,8 @@ Module.register("MMM-DBF", {
         const tableHead = this.createTableHeader(departures);
         tableWrapper.appendChild(tableHead);
         this.createTableContent(departures, tableWrapper);
-      } else {
+      }
+      else {
         Log.error(this.dataRequest.error);
       }
     }
@@ -150,23 +153,23 @@ Module.register("MMM-DBF", {
     return this.config.numberOfResults;
   },
 
-    /**
-     * @description Check delay exist
-     * @param {Object[]} departures 
-     */
-    checkDelayExist: function (departures) {
-        for (let index = 0; index < this.getSize(departures); index++) {
-            if (departures[index].delayDeparture) {
-                if (this.config.hideLowDelay && departures[index].delayDeparture >= 5) {
-                    return true;
-                }
-                if (!this.config.hideLowDelay) {
-                    return true;
-                }
-            }
+  /**
+   * @description Check delay exist
+   * @param {Object[]} departures
+   */
+  checkDelayExist: function (departures) {
+    for (let index = 0; index < this.getSize(departures); index++) {
+      if (departures[index].delayDeparture) {
+        if (this.config.hideLowDelay && departures[index].delayDeparture >= 5) {
+          return true;
         }
-        return false;
-    },
+        if (!this.config.hideLowDelay) {
+          return true;
+        }
+      }
+    }
+    return false;
+  },
 
   /**
    * @description Get col number
@@ -253,7 +256,7 @@ Module.register("MMM-DBF", {
       d.getMonth(),
       d.getDate(),
       time[0],
-      time[1]
+      time[1],
     );
     const newStamp = new Date().getTime();
     return Math.round((dateTrain.getTime() - newStamp) / 1000);
@@ -266,8 +269,8 @@ Module.register("MMM-DBF", {
   checkMsgExist(departures) {
     for (let index = 0; index < this.getSize(departures); index += 1) {
       if (
-        departures[index] !== undefined &&
-        departures[index].messages.delay.length > 0
+        departures[index] !== undefined
+        && departures[index].messages.delay.length > 0
       ) {
         return true;
       }
@@ -285,7 +288,7 @@ Module.register("MMM-DBF", {
     const tableHeadValues = [
       this.translate("TRAIN"),
       this.translate("TRACK"),
-      this.translate("DESTINATION")
+      this.translate("DESTINATION"),
     ];
 
     if (this.config.via !== "") {
@@ -293,14 +296,18 @@ Module.register("MMM-DBF", {
     }
     if (!this.config.onlyArrivalTime) {
       tableHeadValues.push(this.translate("DEPARTURE"));
-    } else {
+    }
+    else {
       tableHeadValues.push(this.translate("ARRIVAL"));
     }
 
-        if (this.checkDelayExist(departures) || this.checkCancelledExist(departures)) {
-            const delayClockIcon = '<i class="fa fa-clock-o"></i>';
-            tableHeadValues.push(delayClockIcon);
-        }
+    if (
+      this.checkDelayExist(departures)
+      || this.checkCancelledExist(departures)
+    ) {
+      const delayClockIcon = "<i class=\"fa fa-clock-o\"></i>";
+      tableHeadValues.push(delayClockIcon);
+    }
 
     if (this.config.showDelayMsg && this.checkMsgExist(departures)) {
       tableHeadValues.push(this.translate("DELAYMSG"));
@@ -332,7 +339,7 @@ Module.register("MMM-DBF", {
     for (let index = 0; index < size; index += 1) {
       const obj = departures[index];
       const trWrapper = document.createElement("tr");
-      trWrapper.className = obj.isCancelled ? 'tr cancelled' : 'tr'
+      trWrapper.className = obj.isCancelled ? "tr cancelled" : "tr";
       this.checkMsgExist(obj);
 
       // Check train
@@ -340,27 +347,31 @@ Module.register("MMM-DBF", {
         if (size + 1 <= departures.length) {
           size += 1;
         }
-      } else if (
-        this.config.withoutDestination !== "" &&
-        this.checkDestination(obj, this.config.withoutDestination)
+      }
+      else if (
+        this.config.withoutDestination !== ""
+        && this.checkDestination(obj, this.config.withoutDestination)
       ) {
         if (size + 1 <= departures.length) {
           size += 1;
         }
-      } else if (
-        this.config.onlyDestination !== "" &&
-        !this.checkDestination(obj, this.config.onlyDestination)
+      }
+      else if (
+        this.config.onlyDestination !== ""
+        && !this.checkDestination(obj, this.config.onlyDestination)
       ) {
         if (size + 1 <= departures.length) {
           size += 1;
         }
-      } else {
+      }
+      else {
         const tdValues = [obj.train, obj.platform, obj.destination];
         if (this.config.via !== "") {
           const via = this.getViaFromRoute(obj);
           if (via === false) {
             tdValues.push("");
-          } else {
+          }
+          else {
             tdValues.push(this.getViaFromRoute(obj));
           }
         }
@@ -368,7 +379,8 @@ Module.register("MMM-DBF", {
         let time;
         if (this.config.onlyArrivalTime) {
           time = obj.scheduledArrival;
-        } else {
+        }
+        else {
           time = obj.scheduledDeparture;
         }
 
@@ -385,23 +397,27 @@ Module.register("MMM-DBF", {
             break;
         }
 
-            if (this.checkDelayExist(departures) || this.checkCancelledExist(departures)) {
-                if (obj.delayDeparture > 0 && !this.config.hideLowDelay) {
-                    let delay = ' +' + obj.delayDeparture;
-                    tdValues.push(delay);
-                }
-                else if (obj.delayDeparture >= 5) {
-                    let delay = ' +' + obj.delayDeparture;
-                    tdValues.push(delay);
-                } else if (obj.isCancelled > 0) {
-                    tdValues.push(this.translate("CANCELMSG"));
-                }
-            }
+        if (
+          this.checkDelayExist(departures)
+          || this.checkCancelledExist(departures)
+        ) {
+          if (obj.delayDeparture > 0 && !this.config.hideLowDelay) {
+            let delay = " +" + obj.delayDeparture;
+            tdValues.push(delay);
+          }
+          else if (obj.delayDeparture >= 5) {
+            let delay = " +" + obj.delayDeparture;
+            tdValues.push(delay);
+          }
+          else if (obj.isCancelled > 0) {
+            tdValues.push(this.translate("CANCELMSG"));
+          }
+        }
 
         if (
-          this.config.showDelayMsg &&
-          this.checkMsgExist(departures) &&
-          obj.delayDeparture > 0
+          this.config.showDelayMsg
+          && this.checkMsgExist(departures)
+          && obj.delayDeparture > 0
         ) {
           if (obj.messages.delay.length > 0) {
             tdValues.push(obj.messages.delay[0].text);
@@ -436,10 +452,12 @@ Module.register("MMM-DBF", {
       if (this.config.onlyDestination !== "" && this.config.train !== "") {
         tdWrapper.innerHTML = "Destination or train not found";
         Log.error("Destination or train not found");
-      } else if (this.config.onlyDestination !== "") {
+      }
+      else if (this.config.onlyDestination !== "") {
         tdWrapper.innerHTML = "Destination not found";
         Log.error("Destination not found");
-      } else if (this.config.train !== "") {
+      }
+      else if (this.config.train !== "") {
         tdWrapper.innerHTML = "Train not found";
         Log.error("Train not found");
       }
@@ -464,7 +482,7 @@ Module.register("MMM-DBF", {
   getTranslations() {
     return {
       en: "translations/en.json",
-      de: "translations/de.json"
+      de: "translations/de.json",
     };
   },
   /**
@@ -478,5 +496,5 @@ Module.register("MMM-DBF", {
       this.updateDom(this.config.animationSpeed);
     }
     this.loaded = true;
-  }
+  },
 });

@@ -1,13 +1,13 @@
 {
-    "TRAIN": "Zug",
-    "ARRIVAL": "Ankunft",
-    "VIA": "über",
-    "DESTINATION": "Ziel",
-    "DEPARTURE": "Abfahrt",
-    "NOW": "sofort",
-    "MINUTE": "Min",
-    "HOUR": "Std",
-    "TRACK": "Gleis",
-    "DELAYMSG": "Verspätungs Msg",
-    "CANCELMSG": "Fällt aus"
-  }
+  "TRAIN": "Zug",
+  "ARRIVAL": "Ankunft",
+  "VIA": "über",
+  "DESTINATION": "Ziel",
+  "DEPARTURE": "Abfahrt",
+  "NOW": "sofort",
+  "MINUTE": "Min",
+  "HOUR": "Std",
+  "TRACK": "Gleis",
+  "DELAYMSG": "Verspätungs Msg",
+  "CANCELMSG": "Fällt aus"
+}

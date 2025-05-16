@@ -6,23 +6,20 @@
   "author": "Marc Helpenstein <helpi9007@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^8.35.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^8.6.0",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-json": "^3.1.0",
-    "eslint-plugin-markdownlint": "^0.4.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "lint-staged": "^13.1.2",
-    "markdownlint": "^0.27.0",
-    "prettier": "^2.8.4",
-    "stylelint": "^15.2.0",
-    "stylelint-config-standard": "^30.0.1",
-    "stylelint-prettier": "^3.0.0"
+    "@eslint/css": "^0.8.1",
+    "@eslint/js": "^9.27.0",
+    "@eslint/json": "^0.12.0",
+    "@eslint/markdown": "^6.4.0",
+    "@stylistic/eslint-plugin": "^4.2.0",
+    "eslint": "^9.27.0",
+    "eslint-plugin-import-x": "^4.11.1",
+    "globals": "^16.1.0",
+    "prettier": "^3.5.3"
   },
   "scripts": {
-    "lint": "eslint . && stylelint **/*.css && prettier --check .",
-    "lint:fix": "eslint --fix . && stylelint --fix **/*.css && prettier --write ."
+    "lint": "eslint && prettier --check .",
+    "lint:fix": "eslint --fix && prettier --write .",
+    "test": "node --run lint"
   },
   "repository": {
     "type": "git",
