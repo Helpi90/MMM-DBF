@@ -4,29 +4,43 @@ This is a module for the [MagicMirror²](https://github.com/MagicMirrorOrg/Magic
 
 It displays the next departure times and delays (with details) of trains from any city and station in Germany.
 
-## App Theme
+## Screenshots
+
+### App Theme
 
 <p float="left">
   <img src="dbfApp_wide.png" width="40%" />
   <img src="dbfApp_dark.png" width="40%" />
 </p>
 
-## App Detail (after click on a train)
+### App Detail (after click on a train)
 
 <p float="left">
   <img src="dbfApp_high.png" width="40%" />
   <img src="dbfApp_detail.png" width="40%" />
 </p>
 
-## Table
+### Table
 
 <img src="dbfTable.png" width="40%" />
 
-## Installing the module
+## Installation
 
-Clone this repository in yours `~/MagicMirror/modules/`:
+Just clone the module into your modules directory:
 
-`git clone https://github.com/Helpi90/MMM-DBF`
+```bash
+cd ~/MagicMirror/modules
+git clone https://github.com/Helpi90/MMM-DBF
+```
+
+## Update
+
+Just enter the module's directory, pull the update and install the dependencies:
+
+```bash
+cd ~/MagicMirror/modules/MMM-DBF
+git pull
+```
 
 ## Configuration
 
