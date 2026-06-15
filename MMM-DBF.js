@@ -279,6 +279,24 @@ Module.register("MMM-DBF", {
   },
 
   /**
+  * @description Check cancelled exist
+  * @param {Object[]} departures 
+  */
+  checkCancelledExist: function (departures) {
+    for (let index = 0; index < this.getSize(departures); index++) {
+      if (departures[index]["isCancelled"]) {
+        if (this.config.hideLowDelay && departures[index]["isCancelled"] >= 1) {
+          return true;
+        }
+        if (!this.config.hideLowDelay) {
+          return true;
+        }
+      }
+    }
+    return false;
+  },
+
+  /**
    * @description Creates the header for the Table
    */
   createTableHeader(departures) {
